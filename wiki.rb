@@ -1,4 +1,5 @@
 require "sinatra"
+require "uri"
 
 def page_content(title)
   File.read("pages/#{title}.txt")
@@ -16,8 +17,18 @@ get ("/") do
     erb :welcome
 end
 
+get "/:new" do
+  erb :new
+  end
+end
+
 get "/:title" do
   @title = params[:title]
   @content = page_content(@title)
   erb :show
+end
+
+post "/create" do
+  save_content(params["title"], params["content"])
+  redirect URI.escape("/#{params["title"]}")
 end
